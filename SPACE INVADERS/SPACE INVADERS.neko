@@ -79,7 +79,14 @@ include random;
 						gm.placeItem(et);
 						gm.update();
 						if (enemies == Null) {
-							>>call win();
+							break <all>;
+							box(
+								name:'gameBox',
+								action:click(>>call menu()),
+								content(
+									text('GAME OVER', 'head1')
+								)
+							);
 						}
 					}
 					then {
@@ -92,15 +99,13 @@ include random;
 								}
 								f die() {
 									break <all>;
-									then {
-										box(
-											name:'gameBox',
-											action:click(>>call menu()),
-											content(
-												text('GAME OVER', 'head1')
-											)
-										);
-									}
+									box(
+										name:'gameBox',
+										action:click(>>call menu()),
+										content(
+											text('GAME OVER', 'head1')
+										)
+									);
 								}
 							}
 							loop (True) {
