@@ -1,0 +1,38 @@
+body {
+	margin: 0;
+	background-image: url("space.gif");
+}
+
+#logo {
+	transform: translateX(50%);
+	size: xy(~, ~);
+}
+
+#start, #hscores {
+	background-color: rgba(50, 250, 200, 0.5);
+	width: 30px;
+	height: 30px;
+}
+
+#start, #hscores :hover {
+	background-color: rgba(50, 250, 200, 0.75);
+}
+
+#link {
+	text-decoration: none;
+	color: palevioletred;
+}
+
+#link :hover {
+	text-decoration: underline;
+}
+
+#hscore_box {
+	transform: translate(50%, -50%);
+	background-color: rgba(255, 255, 255, 0.8);
+	text-align: center;
+}
+
+table * {
+	border: 5px solid rgb(0, 255, 100);
+}
