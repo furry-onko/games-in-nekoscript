@@ -2,6 +2,7 @@ nekoscript ver 1.5
 
 include ui;
 include gamerz as gm;
+include random;
 
 >>main {
 	li high_score = [0], this.scale(10), this.min(0);
@@ -39,7 +40,141 @@ include gamerz as gm;
 	>>call menu();
 
 	f game() {
+		int level = 0;
+		f level() {
+			box(
+				name:'levelbox',
+				content(
+					use # level,
+					level++,
+					text("LEVEL" + level)
+				)
+			);
+			timeoutSec(10, dummy {
+				deleteElement(name:'levelbox');
+				>>call play();
+			});
+		}
+		f play() {
+			bin	enemy1 = load(file('enemy1.png'));
+			bin enemy2 = load(file('enemy2.png'));
+			bin enemy3 = load(file('enemy3.png'));
+			bin enemy4 = load(file('enemy4.png'));
+			bin enemy5 = load(file('enemy5.png'));
+			bin player = load(file('player.png'));
+			bin missle = load(file('missle.png'));
+			bin deadpm = load(file('deadpm.gif'));
+			bin boomsn = load(file('boomsn.wav'));
 
+			f placeEnemies() {
+				use # level;
+				def # enemy_q # int;
+				f place(amount) {
+					for (i = amount, i = 0, i--) {
+						int ex = random.int(0, 100);
+						int ey = random.int(0, 90);
+						int et = 'enemy' + random.int(1, 5);
+						int eid = -i;
+						li enemies += eid;
+						gm.placeItem(et);
+						gm.update();
+						if (enemies == Null) {
+							>>call win();
+						}
+					}
+					then {
+						f enemyShoot() {
+							f onDead() {
+								use # plx # x;
+								use # mx;
+								if (mx == x) {
+									>>call die();
+								}
+								f die() {
+									break <all>;
+									then {
+										box(
+											name:'gameBox',
+											action:click(>>call menu()),
+											content(
+												text('GAME OVER', 'head1')
+											)
+										);
+									}
+								}
+							}
+							loop (True) {
+								timeoutSec(random(2, 10), dummy {
+									double mx = ex;
+									double my = ey - 0.5;
+									gm.placeAt(eid, missle, mx);
+									gm.moveY(missle, my);
+									>>call onDead();
+								});
+							}
+						}
+						loop (True) {
+							intervalSec(3, dummy {
+								enemyShoot();
+							});
+						}
+						f enemyDie() {
+							enemies -= killedEnemy;
+							gm.placeAt(killedEnemy, deadpm);
+						}
+					}
+				}
+
+				if (level == 1) {
+					place(10);
+				}
+				elif (level == 2) {
+					place(20);
+				}
+				elif (level == 3) {
+					place(25);
+				}
+				elif (level == 4) {
+					place(30);
+				}
+				elif (level == 5) {
+					place(40);
+				}
+				else {
+					outp # '[ERROR] At placeEnemies/place: argument "level" is incorrect' # endl;
+				}			
+			}
+			>>call placeEnemies();
+			f controls() {
+				f playerShoot() {
+					double sx = plx;
+					double sy = ply;
+					loop (True) {
+						sy += 0.5;
+						if (sy == ex&ey) {
+							get # eid # killedEnemy;
+							enemyDie();
+							break;
+						}
+					}
+				}
+				addKeyListener(<key>);
+				if (key == 'a'|'larr') {
+					until (#active) {
+						gm.moveY(-1);
+					}
+				}
+				elif (key == 'd'|'rarr') {
+					until (#active) {
+						gm.moveY(1);
+					}
+				}
+				elif (key == 'spacebar') {
+					>>call playerShoot();
+				}
+			}
+			>>call controls();
+		}
 	}
 
 	f hscores() {
@@ -52,13 +187,8 @@ include gamerz as gm;
 				)
 			);
 		}
-		elif (high_score.count() > 0) {
-			box(
-				name:'hscore_box',
-				content(
-					text("Something wrong happened")
-				)
-			);
+		elif (high_score.count() < 0) {
+			outp # "[ERROR] At hscores/high_score/count: High score is below zero" # endl;
 		}
 		else {
 			high_scores_num = high_score.split();
@@ -76,8 +206,7 @@ include gamerz as gm;
 								follow (organised) {
 									tfield(
 										content(
-											#foo use # i,
-											>>init #foo,
+											use # i,
 											i,
 											counted[i]
 										)
@@ -93,4 +222,5 @@ include gamerz as gm;
 			);
 		}
 	}
+	>>call menu();
 }
