@@ -1,1 +1,96 @@
+nekoscript ver 1.5
 
+include ui;
+include gamerz as gm;
+
+>>main {
+	li high_score = [0], this.scale(10), this.min(0);
+
+
+	meta # <charset> # 'UTF-8';
+	meta # <title> # 'SPACE INVADERS';
+	f menu() {
+		window();
+		setWindowSize('full');
+		ui(
+			image('logo.png',
+				name:'logo'
+			),
+			button('Start',
+				name:'start'
+				action:click(>>call game());
+			),
+			button('High Scores',
+				name:'hscores'
+				action:click(>>call hscores());
+			),
+			textgroup(
+				text('By: '),
+				link('@furry_onko',
+					href:'https://furry-onko.xyz/about/',
+					name:'link'
+				)
+			)
+		);
+		uistyle(
+			file('style.css');
+		);
+	}
+	>>call menu();
+
+	f game() {
+
+	}
+
+	f hscores() {
+		use # high_score;
+		if (high_score.count() = 0 | Null) {
+			box(
+				name:'hscore_box',
+				content(
+					text("No highscores yet.")
+				)
+			);
+		}
+		elif (high_score.count() > 0) {
+			box(
+				name:'hscore_box',
+				content(
+					text("Something wrong happened")
+				)
+			);
+		}
+		else {
+			high_scores_num = high_score.split();
+			box(
+				name:'hscore_box',
+				content(
+					table(
+						name:'scoretable',
+						content(
+							local int i = 0;
+							while (this.amount = arrfetch(high_scores_num)) {
+								i += 1;
+								int counted += [this.amount];
+								li organised = self.organise('desc');
+								follow (organised) {
+									tfield(
+										content(
+											#foo use # i,
+											>>init #foo,
+											i,
+											counted[i]
+										)
+									)
+								}
+								if (counted == this.amount) {
+									break while;
+								}
+							}
+						)
+					)
+				)
+			);
+		}
+	}
+}
