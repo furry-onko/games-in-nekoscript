@@ -2,12 +2,10 @@ nekoscript ver 1.5
 
 include ui;
 include gamerz as gm;
-include random;
+include random.int;
 
 >>main {
 	li high_score = [0], this.scale(10), this.min(0);
-
-
 	meta # <charset> # 'UTF-8';
 	meta # <title> # 'SPACE INVADERS';
 	f menu() {
@@ -19,11 +17,11 @@ include random;
 			),
 			button('Start',
 				name:'start'
-				action:click(>>call game());
+				action:click(>>call game())
 			),
 			button('High Scores',
 				name:'hscores'
-				action:click(>>call hscores());
+				action:click(>>call hscores())
 			),
 			textgroup(
 				text('By: '),
@@ -34,7 +32,7 @@ include random;
 			)
 		);
 		uistyle(
-			file('style.css');
+			file('style.css')
 		);
 	}
 	>>call menu();
@@ -47,7 +45,7 @@ include random;
 				content(
 					use # level,
 					level++,
-					text("LEVEL" + level)
+					text("LEVEL " + level)
 				)
 			);
 			timeoutSec(10, dummy {
@@ -71,9 +69,9 @@ include random;
 				def # enemy_q # int;
 				f place(amount) {
 					for (i = amount, i = 0, i--) {
-						int ex = random.int(0, 100);
-						int ey = random.int(0, 90);
-						int et = 'enemy' + random.int(1, 5);
+						int ex = random.int.int(0, 100);
+						int ey = random.int.int(0, 90);
+						int et = 'enemy' + random.int.int(1, 5);
 						int eid = -i;
 						li enemies += eid;
 						gm.placeItem(et);
@@ -109,7 +107,7 @@ include random;
 								}
 							}
 							loop (True) {
-								timeoutSec(random(2, 10), dummy {
+								timeoutSec(random.int(2, 10), dummy {
 									double mx = ex;
 									double my = ey - 0.5;
 									gm.placeAt(eid, missle, mx);
@@ -119,7 +117,7 @@ include random;
 							}
 						}
 						loop (True) {
-							intervalSec(3, dummy {
+							intervalSec(random.int(2,7), dummy {
 								enemyShoot();
 							});
 						}
