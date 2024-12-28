@@ -36,3 +36,11 @@ body {
 table * {
 	border: 5px solid rgb(0, 255, 100);
 }
+
+#score {
+	margin: 0;
+	top: 0;
+	right: 0;
+	position: fixed;
+	size: xy(~+1px, ~+1px);
+}

@@ -38,6 +38,7 @@ include random.int;
 	>>call menu();
 
 	f game() {
+		int score = 0000, this.fullShow(True);
 		int level = 0;
 		f level() {
 			box(
@@ -65,9 +66,14 @@ include random.int;
 			bin boomsn = load(file('boomsn.wav'));
 
 			f placeEnemies() {
-				use # level;
-				def # enemy_q # int;
+				use # level, score;
 				f place(amount) {
+					box(
+						name:'score',
+						content(
+							text(score)
+						);
+					);
 					for (i = amount, i = 0, i--) {
 						int ex = random.int.int(0, 100);
 						int ey = random.int.int(0, 90);
@@ -124,6 +130,8 @@ include random.int;
 						f enemyDie() {
 							enemies -= killedEnemy;
 							gm.placeAt(killedEnemy, deadpm);
+							score += 10;
+							uiUpdate();
 						}
 					}
 				}
